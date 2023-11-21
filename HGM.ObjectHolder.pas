@@ -28,7 +28,7 @@ type
   public
     procedure HoldComponent(AComponent: TComponent);
     function IsLive: Boolean;
-    constructor Create;
+    constructor Create(AComponent: TComponent = nil);
     destructor Destroy; override;
   end;
 
@@ -47,8 +47,7 @@ procedure TaskRun(const Owner: TComponent; Proc: TProc<IComponentHolder>);
 var
   ObjectHold: IComponentHolder;
 begin
-  ObjectHold := TComponentHolder.Create;
-  ObjectHold.HoldComponent(Owner);
+  ObjectHold := TComponentHolder.Create(Owner);
   TTask.Run(
     procedure
     begin
@@ -89,10 +88,11 @@ end;
 
 { TComponentHolder }
 
-constructor TComponentHolder.Create;
+constructor TComponentHolder.Create(AComponent: TComponent);
 begin
-  inherited;
+  inherited Create;
   FHolder := THolder.Create(nil);
+  FHolder.HoldComponent(AComponent);
 end;
 
 destructor TComponentHolder.Destroy;

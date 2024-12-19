@@ -57,7 +57,7 @@ end;
 
 procedure Queue(Proc: TThreadProcedure);
 begin
-  TThread.Queue(nil, Proc);
+  TThread.ForceQueue(nil, Proc);
 end;
 
 procedure Sync(Proc: TThreadProcedure);

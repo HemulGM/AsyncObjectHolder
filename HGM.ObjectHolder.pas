@@ -17,7 +17,6 @@ type
   end;
 
   IComponentHolder = interface
-    ['{FBCA20CB-E6BB-403B-877C-230F4D343A17}']
     procedure HoldComponent(AComponent: TComponent);
     function IsLive: Boolean;
   end;
@@ -38,6 +37,8 @@ procedure Queue(Proc: TThreadProcedure);
 
 procedure Sync(Proc: TThreadProcedure);
 
+procedure ForceQueue(Proc: TThreadProcedure);
+
 implementation
 
 uses
@@ -52,13 +53,26 @@ begin
   TTask.Run(
     procedure
     begin
-      Proc(ObjectHold);
+      try
+        Proc(ObjectHold);
+      finally
+        TThread.ForceQueue(nil,
+          procedure
+          begin
+            ObjectHold := nil;
+          end);
+      end;
     end);
 end;
 
 procedure Queue(Proc: TThreadProcedure);
 begin
   TThread.Queue(nil, Proc);
+end;
+
+procedure ForceQueue(Proc: TThreadProcedure);
+begin
+  TThread.ForceQueue(nil, Proc);
 end;
 
 procedure Sync(Proc: TThreadProcedure);

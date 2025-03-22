@@ -66,7 +66,7 @@ end;
 
 procedure Queue(Proc: TThreadProcedure);
 begin
-  TThread.ForceQueue(nil, Proc);
+  TThread.Queue(nil, Proc);
 end;
 
 procedure ForceQueue(Proc: TThreadProcedure);
